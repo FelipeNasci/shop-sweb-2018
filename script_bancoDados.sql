@@ -22,6 +22,14 @@ create table produtos(
 
 );
 
+create table usuario(
+	
+	login varchar(30) not null unique,
+	senha varchar(30) not null,
+	primary key(login)
+
+);
+
 INSERT INTO categorias (nome)
 VALUES
     ('cpu'),
@@ -34,6 +42,19 @@ INSERT INTO produtos (nome, catid, valor)
 VALUES
     ('Hd Externo', '2', '400.00'),
     ('2', 'CPU i7', '1', '800.00');
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 select * from categorias;

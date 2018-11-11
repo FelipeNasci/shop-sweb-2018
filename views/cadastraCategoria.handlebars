@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home Page</title>
+
+
+<!-- <script type="text/javascript"> alert('hello');</script> -->
+
+</head>
+
+<body>
+	
+	
+
+	 <form id="f" action="categoriaCadastrada" method="post">
+
+		<h4> Categorias </h4>
+			
+			<!-- Exibe as categorias -->
+			<ul>
+				{{#each resultado}}
+					<li> 
+						{{this.nome}} 
+					</li>
+				{{/each}}
+			</ul>
+
+
+		<input type="text" name="nomeCategoria" id="idNomeCategoria" size="20" placeholder="Nome da Categoria" > <br>
+
+		<input type="submit" id="idSubmitProduto" value="ok"/> 
+
+	</form> 	
+
+								
+
+
+</body>
+</html>

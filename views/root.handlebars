@@ -43,10 +43,11 @@
 				<!-- Menu de cabecalho -->
 				<nav>
 					<ul>
-						<li><a href="clienteLogado.html">Home</a></li>
+						<li><a href="/">Home</a></li>
 						<li>Novidades</li>
 						<li>Contato</li>
 						<li><a href="cadastroProduto">Cadastrar Produto</a></li>
+						<li><a href="cadastraCategoria">Adicionar Categoria</a></li>
 					</ul>
 				</nav>
 
@@ -57,8 +58,18 @@
 				<div id="myMain">
 					<!-- Nav - Contem os links (importantes) de navegacao -->
 					<nav> <!-- Menu de categorias -->
-						<ul>
+						
 
+						<ul>
+							{{#each resultado}}
+								<li> {{this.nome}} </li>
+							{{/each}}
+						</ul>
+
+
+
+<!--
+						<ul>
 							<li> CPU </li>
 							<li> Disco Rígido </li>
 							<li> Memória RAM </li>
@@ -68,8 +79,8 @@
 							<li> Placa Mãe </li>
 							<li> Roteadores </li>
 							<li> Teclado </li>
-
 						</ul>
+-->						
 					</nav>
 
 					<div class="Produtos">
