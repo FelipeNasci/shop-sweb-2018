@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home Page</title>
+
+
+<!-- <script type="text/javascript"> alert('hello');</script> -->
+
+</head>
+
+<body>
+	
+	
+
+	 <form id="f" action="produtoCadastrado" method="post">
+
+
+		<input type="text" name="nomeProduto" id="idNomeProd" size="20" placeholder="Nome do Produto" > <br>
+
+		Valor* <input type="number" name="valorProduto" id="idValorProd" value="0.0" min="0.0" set="any" >
+
+		<h4> Categorias </h4>
+			
+				<ul>
+					{{#each resultado}}
+						<li> 
+							<input type="radio" id="idRadioProduto" name="catid" value="{{this.catid}}"/> {{this.nome}} 
+					
+						</li>
+					{{/each}}
+				</ul>
+
+
+		<input type="submit" id="idSubmitProduto" value="ok"/> 
+
+	</form> 	
+
+								
+
+
+</body>
+</html>
