@@ -47,7 +47,7 @@ VALUES
 INSERT INTO produtos (nome, catid, valor)
 VALUES
     ('Hd Externo', '2', '400.00'),
-    ('2', 'CPU i7', '1', '800.00')
+    ('CPU i7', '1', '800.00')
 ;
 
 insert into produtos (nome, catid, valor) values ('Monitor Sans','4','200.00');

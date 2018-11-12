@@ -67,7 +67,7 @@ var connection = mysql.createConnection( {
 
 	host	: 'localhost',
 	user 	: 'adm',
-	password: 'user',
+	password: 'pass',
 	database: 'loja'
 
 } );
@@ -115,13 +115,39 @@ function home(req, res){
 
 }
 
+function root (login, req, res){
+
+
+	var sqlQuery = 'select * from categorias';
+
+	connection.query(sqlQuery, function(error, resultado, campos) {
+
+		//console.log('Acessando categorias do Banco');
+
+		if(error) throw error;
+
+		//console.log("Resultados da requisicao");
+		//console.log(resultado)
+
+		res.render ( 'root', {
+
+			layout: 'layoutRoot',
+			login: login,
+			resultado: resultado
+
+		} );
+
+	});
+
+}
+
 // rotas do site
 
 
 app.get('/', function(req, res){
 
 	home(req, res);
-	console.log('Cookies: ', req.sessionio);
+	console.log('Cookies: ', req.sessionid);
 	console.log('Session Key: ', req.session.key);
 
 });
@@ -142,23 +168,60 @@ app.post('/pgLogin', function(req, res){
 		if(error) throw error;
 
 		if(resultado == ''){
+
 			console.log('LOGIN INVALIDO' + resultado);
-			res.send(	"alert('Login ou Senha invalida')");
 			home(req, res);
+
 		}else if (login == 'root' && senha == 'root'){
-			res.send('Entrou como root');
+
+			root(login, req, res);
+
 		}else{
+
 			res.send('usuario logado');
+
 		}
 
-console.log(resultado);
+
+		console.log(resultado);
+
 	});
 
 	
 
 });
 
+app.get('/cadastro', function(req, res){
 
+	res.render('cadastro');
+
+
+});
+
+app.post('/cadastro', function(req, res){
+	
+	var login = req.body.login;
+	var senha = req.body.senha;
+
+	console.log('login = ' + login);
+	console.log('senha = ' +senha);
+
+	var sqlQuery = "insert into usuario (login, senha) values ('" + login + "','" + senha  + "');";
+	
+	console.log('solicita cadastro de usuario');
+
+	connection.query(sqlQuery, function(error, resultado, campos) {
+
+		console.log(sqlQuery);
+
+		if(error) throw error;
+
+		console.log('Cadastro realizado');
+	});
+
+	home(req, res);
+
+});
 
 //Quando o root clickar em CADASTRAR PRODUTO
 
@@ -168,9 +231,6 @@ app.get('/cadastroProduto', function (req, res) {
 	console.log('requisita nome de categorias');
 
 	var sqlQuery = 'select * from categorias';
-
-	var login;
-	var senha;
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
