@@ -133,7 +133,7 @@ app.post('/pgLogin', function(req, res){
 	var senha = req.body.senha;
 
 
-	var sqlQuery = "SELECT login, senha FROM usuario WHERE login = 'root';"
+	var sqlQuery = "select login, senha from usuario where login = '" + login + "' and senha = '" + senha + "';";
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
@@ -141,12 +141,15 @@ app.post('/pgLogin', function(req, res){
 
 		if(error) throw error;
 
-		res.render('loginDB', {
-
-			resultado: resultado
-
-		} );
-
+		if(resultado == ''){
+			console.log('LOGIN INVALIDO' + resultado);
+			res.send(	"alert('Login ou Senha invalida')");
+			home(req, res);
+		}else if (login == 'root' && senha == 'root'){
+			res.send('Entrou como root');
+		}else{
+			res.send('usuario logado');
+		}
 
 console.log(resultado);
 	});
