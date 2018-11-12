@@ -1,24 +1,104 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Home Page</title>
-</head>
+
 <body>
 
+	<div id="corpo">
+	
+		<!-- Header - Define o cabecalho ou grupos de titulos -->
+		<header>
 
-	<h1>{{title}}</h1>
-	<!-- <h3> {{resultado}} </h3> -->
+			<div id="cabecalho">
+				
+				<!-- Logotipo -->
+				<div id="logo">
+					<h1> GameStore </h1>
+				</div>
 
+				<!-- Dados do usuario -->
+				<div id="dadosUsuario">
+				
+					<form action="pgLogin" method="post" name="formLogin">
+						<input type="email" name="login" id="idLogin" size="20" placeholder="Login"  />    
+						<input type="password" name="senha" id="idSenha" size="10" placeholder="Senha" /> 
+						<input type="submit" id="idOkLogin" size="2" value="OK" />
+					</form>
 
-			{{#each resultado}}
+				</div>
 
-					{{this.catid}} 
-					{{this.nome}} 
+				<!-- Caarrinnho -->
+				<div id="cadastrar-se">
+						<p>Cadastrar-se</p>
+				</div>
+				
+			</div> <!-- Fim cabecalho -->
+			
+			<!-- Menu de cabecalho -->
+			<nav>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li>Novidades</li>
+					<li>Contato</li>
+				</ul>
+			</nav>
 
-			{{/each}}
+		</header>
 
+		<main>
 
+			<div id="myMain">
+				<!-- Nav - Contem os links (importantes) de navegacao -->
+				<nav> <!-- Menu de categorias -->
+					<ul>
+						{{#each resultado}}
+							<li> {{this.nome}} </li>
+						{{/each}}
+					</ul>
+				</nav>
 
+				<div class="Produtos">
+
+					<ul>
+
+						<!-- Produto 1 -->
+						<li>	
+							<figure class="Fig-produto">
+								<img src="images/processador-i7.png" alt="CPU Core i7">
+								<figcaption>
+									<h5>Em estoque</h5>
+								</figcaption>
+							</figure>
+							<h3>Processador i7 8086k</h3>						
+							<span id="p1"> R$ 1.000,00 </span> <br>
+							<input type="button" name="botao-p1" value="Adicionar" onClick="cart()" />
+						</li>
+
+						<!-- Produto 2 -->
+						<li>	
+							<figure class="Fig-produto">
+								<img src="images/ssd-kingston-240gb.png" alt="CPU Core i7">
+								<figcaption>
+									<h5>Esgotado</h5>
+								</figcaption>
+							</figure>
+							<h3>HD SSD Kingston</h3>
+							<span> R$ 1.000,00 </span> <br>
+							<input type="button" name="botao-p2" value="Adicionar" onClick="cart()" />
+						</li>
+
+					</ul> <!-- Fim lista de produtos -->
+
+				</div> <!-- Fim classe de produtos -->
+			
+			</div>
+
+		</main>
+		
+		<!-- Footer - Contem os elementos de rodape -->
+		<footer>
+			<address>
+				<a href="https://github.com/felipenasci">gitHub</a>
+			</address>
+		</footer>
+	
+	</div>
 
 </body>
-</html>

@@ -1,7 +1,6 @@
 
 var express = require('express');
 
-
 var app = express();	//variavel do Servidor
 
 var bodyParser = require('body-parser');
@@ -9,6 +8,43 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded( {extended: true} ));
 
 var urlencodedParser = bodyParser.urlencoded( {extended: false} );
+
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+
+var redis = require('redis');
+var session = require('express-session');
+var redisStore = require('connect-redis')(session);
+var redisClient = redis.createClient();
+
+app.use(session({
+
+	secret: 'ssshhhh',
+	//create new redis store
+	store: new redisStore({ 
+		host: 'localhost', 
+		port: 6379,
+		redisClient: redisClient,
+		ttl: 260 }),
+	saveUniitialized: false,
+	resave: false
+
+}));
+
+/*
+var session = require('express-session'), RedisStore = require('connect-redis') (session);
+app.use(session({
+
+	store: new RedisStore({ 'host': config.redisHost, 'port':6379  }),
+	secret: 'qA5JrwUCTZuqTAEPEZMhaMWq',
+	resave: false,
+	saveUniitialized: false,
+	cookie: {maxAge: 6000} //Tempo que uma sessao fica ativa -> 60s
+
+}));
+*/
+app.use(express.static('public'));
 
 var handlebars = require('express-handlebars');
 app.engine("handlebars", handlebars( {defaultLayout: 'main'} ));
@@ -21,6 +57,7 @@ app.listen( porta, function(req, res) {
 	console.log('Servidor ativo na porta ' + porta);
 
 } );
+
 
 //*****************************************************
 // --- conexao com o banco de dados
@@ -51,22 +88,22 @@ connection.connect( function(err){
 //Pagina incial
 function home(req, res){
 
-	console.log('requisita nome de categorias');
+	//console.log('requisita nome de categorias');
 
 	var sqlQuery = 'select * from categorias';
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
-		console.log('Acessando categorias do Banco');
+		//console.log('Acessando categorias do Banco');
 
 		if(error) throw error;
 
-		console.log("Resultados da requisicao");
-		console.log(resultado)
+		//console.log("Resultados da requisicao");
+		//onsole.log(resultado)
 
-		res.render ( 'root', {
+		res.render ( 'home', {
 
-			layout: 'layoutRoot',
+			//layout: 'layoutRoot',
 			resultado: resultado
 
 		} );
@@ -80,11 +117,45 @@ function home(req, res){
 
 // rotas do site
 
+
 app.get('/', function(req, res){
 
 	home(req, res);
+	console.log('Cookies: ', req.sessionio);
+	console.log('Session Key: ', req.session.key);
 
 });
+
+
+app.post('/pgLogin', function(req, res){
+
+	var login = req.body.login;
+	var senha = req.body.senha;
+
+
+	var sqlQuery = "SELECT login, senha FROM usuario WHERE login = 'root';"
+
+	connection.query(sqlQuery, function(error, resultado, campos) {
+
+		console.log(sqlQuery);
+
+		if(error) throw error;
+
+		res.render('loginDB', {
+
+			resultado: resultado
+
+		} );
+
+
+console.log(resultado);
+	});
+
+	
+
+});
+
+
 
 //Quando o root clickar em CADASTRAR PRODUTO
 
@@ -95,6 +166,9 @@ app.get('/cadastroProduto', function (req, res) {
 
 	var sqlQuery = 'select * from categorias';
 
+	var login;
+	var senha;
+
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
 		console.log('Acessando categorias do Banco');
@@ -104,7 +178,7 @@ app.get('/cadastroProduto', function (req, res) {
 		console.log("Resultados da requisicao");
 		console.log(resultado)
 
-		res.render ( 'cadastroProduto', {
+		res.res ( 'cadastroProduto', {
 			resultado: resultado
 		} );
 
