@@ -53,10 +53,16 @@ app.listen( porta, function(req, res) {
 var mysql = require('mysql');
 var connection = mysql.createConnection( {
 
+/*
 	host	: 'localhost',
 	user 	: 'root',
 	password: 'K@llyl310793',
 	database: 'shop-sweb'
+*/	
+	host	: 'localhost',
+	user 	: 'adm',
+	password: 'pass',
+	database: 'loja'
 
 } );
 
@@ -73,7 +79,7 @@ connection.connect( function(err){
 // -- Fim Conexao com o banco
 //*****************************************************
 
-//Pagina incial
+//Pagina incial para qualquer usuario
 function home(req, res){
 
 	//console.log('requisita nome de categorias');
@@ -82,27 +88,20 @@ function home(req, res){
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
-		//console.log('Acessando categorias do Banco');
+		console.log('Acessando categorias do Banco');
 
 		if(error) throw error;
 
-		//console.log("Resultados da requisicao");
-		//onsole.log(resultado)
-
+		//enviar a pg inciial
 		res.render ( 'home', {
-
-			//layout: 'layoutRoot',
 			resultado: resultado
-
 		} );
 
 	});
 
-	//{layout: 'layoutRoot'} sobreescreve o template padrao
-	//res.render('root', );
-
 }
 
+//Caso o usuario seja o administrador
 function root (login, req, res){
 
 
@@ -110,16 +109,11 @@ function root (login, req, res){
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
-		//console.log('Acessando categorias do Banco');
-
 		if(error) throw error;
-
-		//console.log("Resultados da requisicao");
-		//console.log(resultado)
 
 		res.render ( 'root', {
 
-			layout: 'layoutRoot',
+			layout: 'layout/layoutRoot',
 			login: login,
 			resultado: resultado
 
@@ -130,7 +124,6 @@ function root (login, req, res){
 }
 
 // rotas do site
-
 
 app.get('/', function(req, res){
 
@@ -159,17 +152,22 @@ app.post('/pgLogin', function(req, res){
 			home(req, res);
 
 		}else if (resultado[0].nivel_acesso == 1){
+
+			console.log('entrou no else if');
+			console.log(resultado[0].nivel_acesso);
 			req.session.key = req.sessionID;
 			root(login, req, res);
 
 		}else{
+
+			console.log('entrou no else');
+
 			req.session.key = req.sessionID;
 			res.send('Usuário logado');
 
 		}
 
-
-		console.log(resultado);
+		//console.log(resultado);
 
 	});
 
@@ -303,31 +301,3 @@ app.post('/categoriaCadastrada', function(req, res){
 
 	home(req, res);
 });
-
-/*
-app.get( '/', function(req, res){
-
-	console.log('Acessaram a home page');
-
-	var sqlQuery = 'select * from categorias';
-	
-
-	connection.query(sqlQuery, function(error, resultado, campos) {
-
-		console.log('Acessando o BD');
-
-		if(error) throw error;
-
-		console.log("Resultados da requisicao");
-		console.log(resultado)
-
-		res.render ( 'home', {
-			title: "Exemplo de banco de dados - esta trabalhando?",
-			resultado: resultado
-
-		} );
-
-	});
-
-} );
-*/
