@@ -12,14 +12,11 @@ var urlencodedParser = bodyParser.urlencoded( {extended: false} );
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-/*
+
 var redis = require('redis');
 var session = require('express-session');
-
-
 var redisStore = require('connect-redis')(session);
 var redisClient = redis.createClient();
-
 
 app.use(session({
 
@@ -28,25 +25,13 @@ app.use(session({
 	store: new redisStore({ 
 		host: 'localhost', 
 		port: 6379,
-		redisClient: redisClient,
-		ttl: 260 }),
-	saveUniitialized: false,
+		client: redisClient,
+		}),
+	saveUninitialized: false,
 	resave: false
 
 }));
 
-
-var session = require('express-session'), RedisStore = require('connect-redis') (session);
-app.use(session({
-
-	store: new RedisStore({ 'host': config.redisHost, 'port':6379  }),
-	secret: 'qA5JrwUCTZuqTAEPEZMhaMWq',
-	resave: false,
-	saveUniitialized: false,
-	cookie: {maxAge: 6000} //Tempo que uma sessao fica ativa -> 60s
-
-}));
-*/
 app.use(express.static('public'));
 
 var handlebars = require('express-handlebars');
@@ -69,9 +54,9 @@ var mysql = require('mysql');
 var connection = mysql.createConnection( {
 
 	host	: 'localhost',
-	user 	: 'adm',
-	password: 'pass',
-	database: 'loja'
+	user 	: 'root',
+	password: 'K@llyl310793',
+	database: 'shop-sweb'
 
 } );
 
@@ -91,7 +76,7 @@ connection.connect( function(err){
 //Pagina incial
 function home(req, res){
 
-	console.log('requisita nome de categorias');
+	//console.log('requisita nome de categorias');
 
 	var sqlQuery = 'select * from categorias';
 
@@ -150,8 +135,6 @@ function root (login, req, res){
 app.get('/', function(req, res){
 
 	home(req, res);
-	console.log('Cookies: ', req.sessionid);
-	//console.log('Session Key: ', req.session.key);
 
 });
 
@@ -162,7 +145,7 @@ app.post('/pgLogin', function(req, res){
 	var senha = req.body.senha;
 
 
-	var sqlQuery = "select login, senha from usuario where login = '" + login + "' and senha = '" + senha + "';";
+	var sqlQuery = "SELECT * from usuario WHERE login = '" + login + "' AND senha = '" + senha + "';";
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
@@ -172,16 +155,16 @@ app.post('/pgLogin', function(req, res){
 
 		if(resultado == ''){
 
-			console.log('LOGIN INVALIDO' + resultado);
+			console.log('LOGIN INVALIDO');
 			home(req, res);
 
-		}else if (login == 'root' && senha == 'root'){
-
+		}else if (resultado[0].nivel_acesso == 1){
+			req.session.key = req.sessionID;
 			root(login, req, res);
 
 		}else{
-
-			res.send('usuario logado');
+			req.session.key = req.sessionID;
+			res.send('Usuário logado');
 
 		}
 

@@ -31,6 +31,7 @@ create table usuario(
 	
 	login varchar(30) not null unique,
 	senha varchar(30) not null,
+	nivel_acesso int(2),
 	primary key(login)
 
 );
