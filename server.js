@@ -88,7 +88,13 @@ function home(req, res){
 
 	//console.log('requisita nome de categorias');
 
+	var sqlQueryP = 'select * from produtos WHERE pid <= 3'
 	var sqlQuery = 'select * from categorias';
+
+	connection.query(sqlQueryP, function(error, resultado, campos) {
+		if(error) throw error;
+		sqlQueryP = resultado;
+	});
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
@@ -98,7 +104,8 @@ function home(req, res){
 
 		//enviar a pg inciial
 		res.render ( 'home', {
-			resultado: resultado
+			resultado: resultado,
+			sqlQueryP: sqlQueryP
 		} );
 
 	});
@@ -108,8 +115,14 @@ function home(req, res){
 //Caso o usuario seja o administrador
 function root (login, req, res){
 
+	var sqlQueryP = 'select * from produtos WHERE pid <= 3'
 	//Menu de categorias
 	var sqlQuery = 'select * from categorias';
+
+	connection.query(sqlQueryP, function(error, resultado, campos) {
+		if(error) throw error;
+		sqlQueryP = resultado;
+	});
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
@@ -119,6 +132,7 @@ function root (login, req, res){
 
 			layout: 'layoutRoot',
 			login: login,
+			sqlQueryP: sqlQueryP,
 			resultado: resultado
 
 		} );
@@ -310,3 +324,7 @@ app.post('/categoriaCadastrada', function(req, res){
 
 	root('root', req, res);
 });
+
+app.get('/root', function(req, res){
+	root('root', req, res);
+})

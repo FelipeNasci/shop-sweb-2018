@@ -57,7 +57,7 @@
 				<div class="Produtos">
 
 					<ul>
-
+						{{#each sqlQueryP}}
 						<!-- Produto 1 -->
 						<li>	
 							<figure class="Fig-produto">
@@ -66,24 +66,12 @@
 									<h5>Em estoque</h5>
 								</figcaption>
 							</figure>
-							<h3>Processador i7 8086k</h3>						
-							<span id="p1"> R$ 1.000,00 </span> <br>
+							<h3> {{this.nome}} </h3>						
+							<span id="p1"> {{this.valor}} </span> <br>
 							<input type="button" name="botao-p1" value="Adicionar" onClick="cart()" />
 						</li>
-
-						<!-- Produto 2 -->
-						<li>	
-							<figure class="Fig-produto">
-								<img src="images/ssd-kingston-240gb.png" alt="CPU Core i7">
-								<figcaption>
-									<h5>Esgotado</h5>
-								</figcaption>
-							</figure>
-							<h3>HD SSD Kingston</h3>
-							<span> R$ 1.000,00 </span> <br>
-							<input type="button" name="botao-p2" value="Adicionar" onClick="cart()" />
-						</li>
-
+						{{/each}}
+						
 					</ul> <!-- Fim lista de produtos -->
 
 				</div> <!-- Fim classe de produtos -->
