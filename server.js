@@ -12,11 +12,14 @@ var urlencodedParser = bodyParser.urlencoded( {extended: false} );
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-
+/*
 var redis = require('redis');
 var session = require('express-session');
+
+
 var redisStore = require('connect-redis')(session);
 var redisClient = redis.createClient();
+
 
 app.use(session({
 
@@ -32,7 +35,7 @@ app.use(session({
 
 }));
 
-/*
+
 var session = require('express-session'), RedisStore = require('connect-redis') (session);
 app.use(session({
 
@@ -88,7 +91,7 @@ connection.connect( function(err){
 //Pagina incial
 function home(req, res){
 
-	//console.log('requisita nome de categorias');
+	console.log('requisita nome de categorias');
 
 	var sqlQuery = 'select * from categorias';
 
@@ -148,7 +151,7 @@ app.get('/', function(req, res){
 
 	home(req, res);
 	console.log('Cookies: ', req.sessionid);
-	console.log('Session Key: ', req.session.key);
+	//console.log('Session Key: ', req.session.key);
 
 });
 
