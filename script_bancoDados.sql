@@ -53,9 +53,9 @@ VALUES
 
 insert into produtos (nome, catid, valor) values ('Monitor Sans','4','200.00');
 
-INSERT INTO usuario (login, senha)
+INSERT INTO usuario (login, senha, nivel_acesso)
 VALUES
-    ('root', 'root')
+    ('root', 'root', '1')
 ;
 
 select * from categorias;

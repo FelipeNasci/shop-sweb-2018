@@ -79,6 +79,10 @@ connection.connect( function(err){
 // -- Fim Conexao com o banco
 //*****************************************************
 
+
+
+//******	USUARIOS NAO CADASTRADOS 	******
+
 //Pagina incial para qualquer usuario
 function home(req, res){
 
@@ -104,7 +108,7 @@ function home(req, res){
 //Caso o usuario seja o administrador
 function root (login, req, res){
 
-
+	//Menu de categorias
 	var sqlQuery = 'select * from categorias';
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
@@ -113,7 +117,7 @@ function root (login, req, res){
 
 		res.render ( 'root', {
 
-			layout: 'layout/layoutRoot',
+			layout: 'layoutRoot',
 			login: login,
 			resultado: resultado
 
@@ -131,14 +135,14 @@ app.get('/', function(req, res){
 
 });
 
-
+//Realiza login
 app.post('/pgLogin', function(req, res){
 
 	var login = req.body.login;
 	var senha = req.body.senha;
 
-
-	var sqlQuery = "SELECT * from usuario WHERE login = '" + login + "' AND senha = '" + senha + "';";
+	//Verifica se login e senha sao compativeis
+	var sqlQuery = "SELECT * from usuario WHERE login = '" + login + "' AND senha = '" + senha + "' ;";
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
 
@@ -153,9 +157,8 @@ app.post('/pgLogin', function(req, res){
 
 		}else if (resultado[0].nivel_acesso == 1){
 
-			console.log('entrou no else if');
-			console.log(resultado[0].nivel_acesso);
 			req.session.key = req.sessionID;
+			console.log('key do root = ' + req.session.key);
 			root(login, req, res);
 
 		}else{
@@ -166,31 +169,27 @@ app.post('/pgLogin', function(req, res){
 			res.send('Usuário logado');
 
 		}
-
-		//console.log(resultado);
-
 	});
-
-	
-
 });
 
+//Pagina de Cadastro
 app.get('/cadastro', function(req, res){
 
+	//Envia para a pagina de cadastro
 	res.render('cadastro');
-
-
 });
 
+//Cadastra novo usuario
 app.post('/cadastro', function(req, res){
 	
 	var login = req.body.login;
 	var senha = req.body.senha;
 
 	console.log('login = ' + login);
-	console.log('senha = ' +senha);
+	console.log('senha = ' + senha);
 
-	var sqlQuery = "insert into usuario (login, senha) values ('" + login + "','" + senha  + "');";
+	//Cadastra novo login, senha e nivel de usuario
+	var sqlQuery = "insert into usuario (login, senha, nivel_acesso) values ('" + login + "','" + senha  + "', '0');";
 	
 	console.log('solicita cadastro de usuario');
 
@@ -207,6 +206,10 @@ app.post('/cadastro', function(req, res){
 
 });
 
+
+// *******	ADMINISTRADOR 	*******
+
+
 //Quando o root clickar em CADASTRAR PRODUTO
 
 app.get('/cadastroProduto', function (req, res) {
@@ -214,6 +217,7 @@ app.get('/cadastroProduto', function (req, res) {
 	//requisitando nome o nome das categorias
 	console.log('requisita nome de categorias');
 
+	//Solicita todas as categorias do banco de dados
 	var sqlQuery = 'select * from categorias';
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
@@ -225,7 +229,7 @@ app.get('/cadastroProduto', function (req, res) {
 		console.log("Resultados da requisicao");
 		console.log(resultado)
 
-		res.res ( 'cadastroProduto', {
+		res.render ( 'cadastroProduto', {
 			resultado: resultado
 		} );
 
@@ -240,8 +244,9 @@ app.post('/produtoCadastrado', function(req, res){
 	var nome = req.body.nomeProduto;
 	var valor = req.body.valorProduto;
 	var catid = req.body.catid;
+	var urlImage = '../public/imagens/' + nome;
 
-
+	//Insere novo produto no banco de dados
 	var sqlQuery = "insert into produtos (nome, catid, valor) values ('" + nome + "','"+ catid  + "','" + valor + "');"
 
 	connection.query(sqlQuery, function(error, resultado, campos) {
@@ -251,9 +256,13 @@ app.post('/produtoCadastrado', function(req, res){
 		if(error) throw error;
 
 		console.log('Produto salvo');
+		
 	});
+	
+	//Volta para a pagina principal do administrador
+	root('root', req, res);
 
-	home(req, res);
+	console.log('encaminha para root');
 
 });
 
@@ -299,5 +308,5 @@ app.post('/categoriaCadastrada', function(req, res){
 		console.log('Produto salvo');
 	});
 
-	home(req, res);
+	root('root', req, res);
 });
